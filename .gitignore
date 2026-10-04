@@ -6,5 +6,7 @@ data/.collector.lock
 data/*.tmp
 processed/*.json
 processed/*.tmp
+processed_extractive/*.json
+processed_extractive/*.tmp
 logs/
 research/

@@ -137,3 +137,13 @@ Ollama `qwen3:4b`（`think: false`），结果写入 `processed/YYYY-MM-DD.json`
 
 省略 `--limit` 才会处理当天全部受支持来源。成功 URL 会直接使用 processed
 缓存；失败记录允许下次重试。正文无法可靠提取时不会仅凭标题生成摘要。
+
+## Summary V0.3 Extractive 实验
+
+V0.3 与 V0.2 并存。它把正文切分成带编号的句子，只让 `qwen3:4b`
+（`think: false`、`temperature: 0`）返回 2—4 个句子编号，再由程序从原文逐字复制；
+结果单独写入 `processed_extractive/YYYY-MM-DD.json`，不接入每日采集任务。
+
+```powershell
+.\.venv\Scripts\python.exe summary_extractive.py 2026-10-04 --limit 20
+```
