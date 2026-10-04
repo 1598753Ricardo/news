@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>人民网采集修复成果 · 学有渔力</title>
+  <style>
+    :root { color-scheme: light; --ink:#172b35; --muted:#5b6d75; --line:#dce5e2; --green:#126951; --red:#b53a39; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#f3f5f1; color:var(--ink); font-family:"Microsoft YaHei","PingFang SC",sans-serif; line-height:1.65; }
+    a { color:var(--green); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    a:focus-visible, summary:focus-visible { outline:3px solid #267eaa; outline-offset:5px; }
+    .page { width:min(1080px,calc(100% - 64px)); margin:0 auto; padding:28px 0 24px; }
+    .top { display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); padding-bottom:17px; }
+    .brand { font-weight:700; letter-spacing:2px; font-size:17px; }
+    .brand span { color:var(--muted); font-size:11px; letter-spacing:1px; margin-left:14px; font-weight:400; }
+    .top a { font-size:13px; }
+    .hero { padding:28px 0 22px; }
+    .eyebrow { font-size:12px; color:var(--green); font-weight:700; letter-spacing:2px; }
+    h1 { font-size:38px; line-height:1.3; letter-spacing:-1px; margin:8px 0 9px; }
+    .hero p { margin:0; color:var(--muted); font-size:14px; }
+    .metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:22px; }
+    .metric { border:1px solid var(--line); background:#fff; border-radius:12px; padding:16px 22px; }
+    .label { color:var(--muted); font-size:13px; }
+    .value { font-size:40px; font-weight:700; line-height:1.25; margin:5px 0; }
+    .value small { font-size:16px; font-weight:400; color:var(--muted); }
+    .value .old { color:#79868b; font-size:30px; font-weight:400; }
+    .value .arrow { color:#9aa6a6; font-size:23px; padding:0 13px; }
+    .good { color:var(--green); }
+    .metric p { margin:0; font-size:12px; color:var(--muted); }
+    .panel { border:1px solid var(--line); background:#fff; border-radius:12px; overflow:hidden; margin-bottom:20px; }
+    .panel-head { padding:14px 22px; display:flex; gap:16px; justify-content:space-between; align-items:baseline; border-bottom:1px solid var(--line); }
+    h2 { font-size:17px; margin:0; font-weight:700; }
+    .panel-head span { font-size:12px; color:var(--muted); }
+    .compare { display:grid; grid-template-columns:1fr 1fr; }
+    .version { padding:16px 22px; }
+    .version + .version { border-left:1px solid var(--line); background:#f8fcf9; }
+    .tag { display:inline-block; border-radius:4px; font-size:11px; font-weight:700; padding:2px 8px; margin-bottom:9px; color:var(--red); background:#fbeeee; }
+    .tag.fixed { color:var(--green); background:#e6f3ec; }
+    .headline { font-size:15px; font-weight:600; margin:0 0 8px; }
+    .shortcut { display:inline-block; background:#fff1f0; color:var(--red); border:1px solid #edc3c0; border-radius:5px; padding:1px 11px; font-weight:700; }
+    .version p { margin:7px 0 0; color:var(--muted); font-size:12px; }
+    .explanation { padding:12px 22px; font-size:12px; color:var(--muted); border-top:1px solid var(--line); background:#fafbf9; }
+    .explanation strong { color:var(--ink); }
+    .samples { list-style:none; padding:0 22px; margin:0; }
+    .samples li { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:11px 0; border-bottom:1px solid #edf1ef; }
+    .samples li:last-child { border:0; }
+    .samples a { color:var(--ink); font-size:14px; }
+    .samples span { font-size:11px; color:var(--green); white-space:nowrap; }
+    details { padding:0 22px 14px; }
+    summary { cursor:pointer; color:var(--green); font-size:13px; padding-top:8px; }
+    .news-list { padding-left:28px; margin:16px 0 0; }
+    .news-list li { padding:7px 0; font-size:14px; }
+    .news-list time { color:var(--muted); font-size:11px; margin-left:10px; white-space:nowrap; }
+    .foot { color:var(--muted); font-size:11px; display:flex; gap:18px; justify-content:space-between; align-items:flex-start; }
+    .foot p { margin:0; }
+    .foot a { white-space:nowrap; }
+    @media(max-width:700px) {
+      .page { width:calc(100% - 32px); padding-top:18px; }
+      .brand span { display:none; }
+      h1 { font-size:30px; }
+      .metrics { gap:8px; }
+      .metric { padding:12px; }
+      .value { font-size:30px; }
+      .value .old { font-size:24px; }
+      .value .arrow { font-size:18px; padding:0 5px; }
+      .metric p { font-size:10px; }
+      .compare { grid-template-columns:1fr; }
+      .version + .version { border-left:0; border-top:1px solid var(--line); }
+      .panel-head { align-items:flex-start; flex-direction:column; gap:3px; }
+      .samples li { align-items:flex-start; }
+      .foot { flex-direction:column; gap:8px; }
+    }
+    @media print { body { background:white; } .page { width:100%; } .panel,.metric { break-inside:avoid; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="top">
+      <div class="brand">学有渔力<span>COLLECTOR V0 / 修复成果</span></div>
+      <a href="https://github.com/1598753Ricardo/news/commit/2f7565298b02f84562f6d5d8533b87c726cf01b8" target="_blank" rel="noopener noreferrer">GitHub · 2f75652 ↗</a>
+    </header>
+    <section class="hero" aria-labelledby="title">
+      <div class="eyebrow">人民网 · 2026.10.04 · 已验证</div>
+      <h1>“评”已退出新闻列表。</h1>
+      <p>同一份真实首页的修复前后对比。只排除误采的配套评论入口，保留正常新闻标题。</p>
+    </section>
+    <section class="metrics" aria-label="验证结果">
+      <div class="metric"><div class="label">修复后有效标题</div><div class="value">29 <small>条</small></div><p>其余 29 条记录的内容与顺序完全一致</p></div>
+      <div class="metric"><div class="label">标题仅为“评”的异常记录</div><div class="value"><span class="old">1</span><span class="arrow">→</span><span class="good">0</span></div><p>同一页面：解析总数 30 → 29</p></div>
+      <div class="metric"><div class="label">全部测试通过</div><div class="value good">19 <small>/ 19</small></div><p>原有 15 项 + 新增 4 项回归测试</p></div>
+    </section>
+    <section class="panel" aria-labelledby="comparison-title">
+      <div class="panel-head"><h2 id="comparison-title">这次具体修好了什么</h2><span>真实首页中的同一条新闻</span></div>
+      <div class="compare">
+        <div class="version"><div class="tag">修复前 · 误采为两条新闻</div><div class="headline">“在平陆运河,做到100分才合格”</div><span class="shortcut">评</span><p>完整标题和旁边的“评”入口，都进入采集结果。</p></div>
+        <div class="version"><div class="tag fixed">修复后 · 保留完整新闻标题</div><div class="headline">“在平陆运河,做到100分才合格”</div><span class="good" style="font-size:13px">✓ 配套评论入口已排除</span><p>正常短标题、完整评论标题和同一行的其他新闻继续保留。</p></div>
+      </div>
+      <div class="explanation"><strong>核实依据：</strong>“评”指向《读懂运河建设背后的发展账本（有感而发）》。本次按人民网列表结构和入口上下文处理，没有使用标题长度阈值。</div>
+    </section>
+    <section class="panel" aria-labelledby="headlines-title">
+      <div class="panel-head"><h2 id="headlines-title">实际解析出的标题</h2><span>点击标题可查看人民网原文 ↗</span></div>
+      <ul class="samples">
+        <li><a href="http://politics.people.com.cn/n1/2026/1004/c461001-40809430.html" target="_blank" rel="noopener noreferrer">观天十载探苍穹</a><span>正常短标题 · 保留</span></li>
+        <li><a href="http://society.people.com.cn/n1/2026/1004/c1008-40809402.html" target="_blank" rel="noopener noreferrer">司法部：2025年共调解各类案件1653.7万件</a><span>完整新闻标题 · 保留</span></li>
+        <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809206.html" target="_blank" rel="noopener noreferrer">评论丨旅游不仅有经济属性，更有文化属性</a><span>完整评论标题 · 保留</span></li>
+      </ul>
+      <details>
+        <summary>展开查看完整 29 条标题</summary>
+        <ol class="news-list">
+          <li><a href="http://politics.people.com.cn/n1/2026/1004/c461001-40809198.html" target="_blank" rel="noopener noreferrer">&quot;五十六个民族就是相亲相爱的一家人&quot;</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://opinion.people.com.cn/n1/2026/1004/c461529-40809199.html" target="_blank" rel="noopener noreferrer">为变乱交织的世界注入更多确定性和正能量</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://politics.people.com.cn/n1/2026/1004/c1001-40809202.html" target="_blank" rel="noopener noreferrer">一见·读懂总书记的丰收祝愿</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://politics.people.com.cn/n1/2026/1004/c461001-40809429.html" target="_blank" rel="noopener noreferrer">&quot;人民就是江山&quot;</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://politics.people.com.cn/n1/2026/1004/c461001-40809430.html" target="_blank" rel="noopener noreferrer">观天十载探苍穹</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809200.html" target="_blank" rel="noopener noreferrer">行走山河,阅见文化中国</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://finance.people.com.cn/n1/2026/1004/c1004-40809423.html" target="_blank" rel="noopener noreferrer">商务部回应G20贸易部长会议:坚持原则 促谈促合</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://politics.people.com.cn/n1/2026/1004/c461001-40809204.html" target="_blank" rel="noopener noreferrer">赓续长征精神 奋进复兴征程|金银滩上的新故事</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://finance.people.com.cn/n1/2026/1004/c1004-40809216.html" target="_blank" rel="noopener noreferrer">&quot;在平陆运河,做到100分才合格&quot;</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://opinion.people.com.cn/n1/2026/1004/c436867-40809327.html" target="_blank" rel="noopener noreferrer">改编《西游记》插曲,一句&quot;致敬&quot;能免责?</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809217.html" target="_blank" rel="noopener noreferrer">古村有了&quot;护身符&quot;</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809205.html" target="_blank" rel="noopener noreferrer">上海入境游,热度&quot;节节高&quot;</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://politics.people.com.cn/n1/2026/1004/c461001-40809427.html" target="_blank" rel="noopener noreferrer">新思想引领新征程丨生态为民 绘就美丽中国新图景</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://society.people.com.cn/n1/2026/1004/c1008-40809402.html" target="_blank" rel="noopener noreferrer">司法部：2025年共调解各类案件1653.7万件</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://finance.people.com.cn/n1/2026/1004/c1004-40809191.html" target="_blank" rel="noopener noreferrer">开创智能网联新能源汽车全球产业合作新局面这样发力</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://politics.people.com.cn/n1/2026/1004/c461001-40809189.html" target="_blank" rel="noopener noreferrer">红色装点 壮游山河——国庆节假期掀起旅游热潮</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://society.people.com.cn/n1/2026/1004/c1008-40809196.html" target="_blank" rel="noopener noreferrer">合理安排出行！全国易拥堵路段及充电特别繁忙服务区名单发布</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://finance.people.com.cn/n1/2026/1004/c1004-40809192.html" target="_blank" rel="noopener noreferrer">海南封关后首个国庆长假：国际范与烟火气十足</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://military.people.com.cn/n1/2026/1004/c1011-40809184.html" target="_blank" rel="noopener noreferrer">中国海军“吉祥方舟”号医院船抵达几内亚</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://tw.people.com.cn/n1/2026/1004/c14657-40809194.html" target="_blank" rel="noopener noreferrer">台湾消费者网购大陆商品带动“小三通”跨境电商出口火爆</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809206.html" target="_blank" rel="noopener noreferrer">评论丨旅游不仅有经济属性，更有文化属性</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809223.html" target="_blank" rel="noopener noreferrer">一纸“红色山水”抒写家国情怀</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809224.html" target="_blank" rel="noopener noreferrer">一座雕塑凝铸国歌记忆</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809197.html" target="_blank" rel="noopener noreferrer">2026年年度电影总票房超300亿这三部暂列票房前三</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809218.html" target="_blank" rel="noopener noreferrer">见光不见灯，“看见”文物的艺术</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809221.html" target="_blank" rel="noopener noreferrer">3000多年前的微笑，凭啥能代表江西省博物馆？</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809219.html" target="_blank" rel="noopener noreferrer">泉州南少林 禅武传千年</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://ent.people.com.cn/n1/2026/1004/c1012-40809207.html" target="_blank" rel="noopener noreferrer">亚运会丨169金89银83铜 中国代表团创亚运会境外参赛最好成绩</a><time datetime="2026-10-04">2026-10-04</time></li>
+          <li><a href="http://politics.people.com.cn/n1/2026/1002/c461001-40808937.html" target="_blank" rel="noopener noreferrer">人民领袖|播下爱我中华的种子</a><time datetime="2026-10-02">2026-10-02</time></li>
+        </ol>
+      </details>
+    </section>
+    <footer class="foot">
+      <p>验证快照：2026-10-04 16:38:02（北京时间）· 人民网首页 HTTP 200<br>原始采集 JSON 保留；36氪、其他来源、存储及整体架构未修改。本页是静态成果报告。</p>
+      <a href="https://github.com/1598753Ricardo/news/blob/main/VERIFICATION.md#2026-10-04-人民网评入口误采修复" target="_blank" rel="noopener noreferrer">查看完整验证记录 ↗</a>
+    </footer>
+  </main>
+</body>
+</html>
