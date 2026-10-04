@@ -48,6 +48,46 @@ class ParsingTests(unittest.TestCase):
         self.assertEqual(xh[0]["summary"], "")
         self.assertEqual(pe[0]["summary"], "")
 
+    def test_people_excludes_paired_comment_shortcut(self):
+        now = NOW + timedelta(days=1)
+        rows = people.parse_page(fixture("people_headlines.html"), now)
+        self.assertEqual([row["title"] for row in rows], [
+            '"五十六个民族就是相亲相爱的一家人"',
+            "为变乱交织的世界注入更多确定性和正能量",
+            "一见·读懂总书记的丰收祝愿",
+            '"人民就是江山"',
+            '"在平陆运河,做到100分才合格"',
+            '改编《西游记》插曲,一句"致敬"能免责?',
+            '古村有了"护身符"',
+        ])
+        self.assertNotIn("评", [row["title"] for row in latest_items(rows, now)])
+        self.assertNotIn("http://finance.people.com.cn/n1/2026/1004/c1004-40809215.html",
+                         [row["url"] for row in rows])
+
+    def test_people_keeps_short_titles_and_full_comment_titles(self):
+        titles = ["春", "春潮", "耿车蝶变", "评论丨旅游不仅有经济属性，更有文化属性"]
+        links = " ".join(
+            f'<a href="http://finance.people.com.cn/n1/2026/1003/c1004-{i}.html">{title}</a>'
+            for i, title in enumerate(titles)
+        )
+        html = f'<ul id="aq_two"><li>{links}</li></ul>'
+        self.assertEqual([row["title"] for row in people.parse_page(html, NOW)], titles)
+
+    def test_people_comment_shortcut_requires_paired_article(self):
+        url = "http://finance.people.com.cn/n1/2026/1003/c1004-1.html"
+        for prefix in ("", '<a href="http://finance.people.com.cn/GB/index.html">栏目</a>'):
+            with self.subTest(prefix=prefix):
+                html = f'<ul id="aq_two"><li>{prefix}<a href="{url}">评</a></li></ul>'
+                self.assertEqual([row["title"] for row in people.parse_page(html, NOW)], ["评"])
+
+    def test_people_only_reads_headline_list_items(self):
+        html = '''<div id="aq_two"><div>
+        <a href="http://finance.people.com.cn/n1/2026/1003/c1004-1.html">辅助入口</a>
+        </div><li><span>
+        <a href="http://finance.people.com.cn/n1/2026/1003/c1004-2.html">正常标题</a>
+        </span></li></div>'''
+        self.assertEqual([row["title"] for row in people.parse_page(html, NOW)], ["正常标题"])
+
     def test_stale_feed_is_not_todays_news(self):
         rss = b'<rss version="2.0"><channel><item><title>Old</title><link>https://www.news.cn/politics/2022-12/14/c_1.htm</link></item></channel></rss>'
         with self.assertRaisesRegex(SourceError, "2022-12-14"):
