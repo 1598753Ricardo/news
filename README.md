@@ -147,3 +147,13 @@ V0.3 与 V0.2 并存。它把正文切分成带编号的句子，只让 `qwen3:4
 ```powershell
 .\.venv\Scripts\python.exe summary_extractive.py 2026-10-04 --limit 20
 ```
+
+## Summary V0.4 Context Guard 实验
+
+V0.4 保持 V0.3 的纯编号选句和原文复制架构，在程序端增加悬空指代补前句、
+明显残片过滤和保守去重。结果独立写入 `processed_context_guard/YYYY-MM-DD.json`；
+无法可靠补全时只标记 `needs_review`，不改写正文，也不接入每日任务。
+
+```powershell
+.\.venv\Scripts\python.exe summary_context_guard.py 2026-10-04 --limit 30
+```

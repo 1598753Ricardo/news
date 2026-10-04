@@ -8,5 +8,7 @@ processed/*.json
 processed/*.tmp
 processed_extractive/*.json
 processed_extractive/*.tmp
+processed_context_guard/*.json
+processed_context_guard/*.tmp
 logs/
 research/
