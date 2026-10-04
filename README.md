@@ -122,3 +122,18 @@ Get-ScheduledTaskInfo -TaskName 'XueYouYuLi-Collector-V0'
 新增来源时增加独立 `collectors/xxx.py`，实现 `SOURCE` 与 `collect(client, now)`，返回 `CollectionResult`，再加入 `main.py` 的 `COLLECTORS`。公共请求、字段规范、存储与调度相互独立；以后需要分析或数据库时可以在采集结果之后接入，本版没有预先实现这些功能。
 
 `tools/inspect_sources.py` 仅用于人工开发检查，不参与定时运行；`research/` 保存本次结构核实的原始响应，已加入 `.gitignore`。请勿频繁重复运行检查脚本。
+
+## Summary V0.2 独立事实摘要
+
+Summary V0.2 只读取已有的 `data/YYYY-MM-DD.json`，访问原文并串行调用本机
+Ollama `qwen3:4b`（`think: false`），结果写入 `processed/YYYY-MM-DD.json`。
+它不由每日采集任务调用，也不会覆盖原始 data 文件。
+
+先按来源轮询选 15 条进行验证：
+
+```powershell
+.\.venv\Scripts\python.exe summary.py 2026-10-04 --limit 15
+```
+
+省略 `--limit` 才会处理当天全部受支持来源。成功 URL 会直接使用 processed
+缓存；失败记录允许下次重试。正文无法可靠提取时不会仅凭标题生成摘要。

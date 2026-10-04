@@ -4,5 +4,7 @@ __pycache__/
 data/*.json
 data/.collector.lock
 data/*.tmp
+processed/*.json
+processed/*.tmp
 logs/
 research/
