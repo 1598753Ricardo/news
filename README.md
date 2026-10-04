@@ -1,6 +1,6 @@
 # 学有渔力 Collector V0
 
-每天从指定公开来源采集最新新闻，进行 URL 去重，保存 JSON 和日志。仅包含采集层；没有数据库、AI、网页或用户系统。
+每天从指定公开来源采集最新新闻，进行 URL 去重，并在影子运行阶段生成本地抽取式事实摘要。没有数据库、网页或用户推送系统。
 
 ## 运行
 
@@ -92,7 +92,7 @@ RSS 是每次运行优先检查的来源。如果恢复更新会自动使用；�
 
 ## 每天 12:00 自动运行
 
-当前机器使用 Windows 任务计划程序，任务名为 `XueYouYuLi-Collector-V0`。每天北京时间 12:00，普通用户权限运行本项目 `.venv\Scripts\pythonw.exe main.py`，不弹出控制台。可在任务计划程序中查看、禁用或删除。
+当前机器使用 Windows 任务计划程序，任务名为 `XueYouYuLi-Collector-V0`。每天北京时间 12:00，普通用户权限运行本项目 `.venv\Scripts\pythonw.exe daily_pipeline.py`，不弹出控制台。流程按顺序执行 Collector V0 和 Summary V0.4；可在任务计划程序中查看、禁用或删除。
 
 注册或修改时间：
 
@@ -152,8 +152,22 @@ V0.3 与 V0.2 并存。它把正文切分成带编号的句子，只让 `qwen3:4
 
 V0.4 保持 V0.3 的纯编号选句和原文复制架构，在程序端增加悬空指代补前句、
 明显残片过滤和保守去重。结果独立写入 `processed_context_guard/YYYY-MM-DD.json`；
-无法可靠补全时只标记 `needs_review`，不改写正文，也不接入每日任务。
+无法可靠补全时只标记 `needs_review`，不改写正文。当前每日任务在 Collector 完成后调用该版本。
 
 ```powershell
 .\.venv\Scripts\python.exe summary_context_guard.py 2026-10-04 --limit 30
 ```
+
+## 每日影子流程
+
+`daily_pipeline.py` 使用北京时间当天日期，先运行现有 Collector，再对当天全部受支持新闻运行
+Summary V0.4。Collector 返回 `1` 时仍继续摘要；返回 `2`、当天数据文件缺失或发生严重
+存储错误时停止摘要。Ollama 或模型不可用只会令摘要阶段失败，不删除原始数据或已有成功摘要。
+
+```powershell
+.\.venv\Scripts\python.exe daily_pipeline.py
+```
+
+运行汇总写入 `logs/last_pipeline_run.json`，`pipeline_status` 区分 `success`、
+`partial_source_failure`、`summary_failure` 和 `fatal_failure`。当前为三天影子运行阶段，
+不包含网页、推送、评级或趋势分析。计划任务允许单次运行最多 30 分钟。
