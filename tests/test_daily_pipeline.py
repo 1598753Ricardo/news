@@ -3,10 +3,12 @@ import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
+
+import requests
 
 import config
-from daily_pipeline import run
+from daily_pipeline import MODEL, OllamaLifecycleError, check_ollama, run
 
 
 NOW = datetime(2026, 10, 4, 12, 0, tzinfo=config.TIMEZONE)
@@ -71,7 +73,10 @@ class DailyPipelineTests(unittest.TestCase):
             source = item()
             result = {**source, "extractive_summary": ["事实一。", "事实二。"],
                       "status": "ok", "needs_review": False}
-            checker = Mock()
+            checker = Mock(return_value={
+                "initial_status": "online", "start_attempted": False,
+                "model_available": True,
+            })
             code = run(
                 data, processed, logs, NOW, self.collector(1, [source]),
                 self.summary([result]), checker,
@@ -81,6 +86,7 @@ class DailyPipelineTests(unittest.TestCase):
             report = json.loads((logs / "last_pipeline_run.json").read_text(encoding="utf-8"))
             self.assertEqual(report["pipeline_status"], "partial_source_failure")
             self.assertEqual(report["summary"]["summaries_available"], 1)
+            self.assertEqual(report["ollama"], checker.return_value)
 
     def test_fatal_collector_stops_summary(self):
         with TemporaryDirectory() as directory:
@@ -126,7 +132,12 @@ class DailyPipelineTests(unittest.TestCase):
             target.write_text(json.dumps(previous, ensure_ascii=False), encoding="utf-8")
             before = target.read_bytes()
             summary = Mock()
-            checker = Mock(side_effect=RuntimeError("Ollama 未启动"))
+            details = {
+                "initial_status": "offline", "start_attempted": True,
+                "start_succeeded": False, "startup_seconds": 30.0,
+                "model_available": False, "failure_reason": "startup_timeout",
+            }
+            checker = Mock(side_effect=OllamaLifecycleError("Ollama 未启动", details))
             source = item()
             code = run(
                 data, processed, logs, NOW, self.collector(0, [source]), summary, checker
@@ -138,6 +149,7 @@ class DailyPipelineTests(unittest.TestCase):
             self.assertEqual(saved, [source])
             report = json.loads((logs / "last_pipeline_run.json").read_text(encoding="utf-8"))
             self.assertEqual(report["pipeline_status"], "summary_failure")
+            self.assertEqual(report["ollama"], details)
 
     def test_all_cached_skips_ollama_preflight(self):
         with TemporaryDirectory() as directory:
@@ -163,6 +175,70 @@ class DailyPipelineTests(unittest.TestCase):
             )
             self.assertEqual(code, 0)
             checker.assert_not_called()
+
+
+class OllamaLifecycleTests(unittest.TestCase):
+    @patch("daily_pipeline.start_ollama_server")
+    @patch("daily_pipeline.ollama_models", return_value={MODEL})
+    def test_already_online(self, models, starter):
+        result = check_ollama()
+        self.assertEqual(result, {
+            "initial_status": "online", "start_attempted": False,
+            "model_available": True,
+        })
+        starter.assert_not_called()
+
+    @patch("daily_pipeline.time.sleep", return_value=None)
+    @patch("daily_pipeline.time.perf_counter", side_effect=[10.0, 13.2])
+    @patch("daily_pipeline.start_ollama_server")
+    @patch("daily_pipeline.find_ollama_executable", return_value="ollama.exe")
+    @patch("daily_pipeline.ollama_models")
+    def test_offline_then_start_success(self, models, finder, starter, clock, sleep):
+        models.side_effect = [
+            requests.ConnectionError("offline"),
+            requests.ConnectionError("offline"),
+            requests.ConnectionError("starting"),
+            {MODEL},
+        ]
+        starter.return_value.poll.return_value = None
+        result = check_ollama(startup_timeout=3)
+        self.assertEqual(result["initial_status"], "offline")
+        self.assertTrue(result["start_attempted"])
+        self.assertTrue(result["start_succeeded"])
+        self.assertEqual(result["startup_seconds"], 3.2)
+        self.assertTrue(result["model_available"])
+        starter.assert_called_once_with("ollama.exe")
+
+    @patch("daily_pipeline.time.sleep", return_value=None)
+    @patch("daily_pipeline.time.perf_counter", side_effect=[10.0, 13.0])
+    @patch("daily_pipeline.start_ollama_server")
+    @patch("daily_pipeline.find_ollama_executable", return_value="ollama.exe")
+    @patch("daily_pipeline.ollama_models", side_effect=requests.ConnectionError("offline"))
+    def test_start_timeout(self, models, finder, starter, clock, sleep):
+        starter.return_value.poll.return_value = None
+        with self.assertRaises(OllamaLifecycleError) as raised:
+            check_ollama(startup_timeout=3)
+        self.assertEqual(raised.exception.details["failure_reason"], "startup_timeout")
+        self.assertEqual(sleep.call_count, 3)
+        starter.return_value.terminate.assert_called_once_with()
+
+    @patch("daily_pipeline.start_ollama_server")
+    @patch("daily_pipeline.ollama_models", return_value={"another-model:latest"})
+    def test_model_missing(self, models, starter):
+        with self.assertRaises(OllamaLifecycleError) as raised:
+            check_ollama()
+        self.assertEqual(raised.exception.details["failure_reason"], "model_missing")
+        self.assertFalse(raised.exception.details["start_attempted"])
+        starter.assert_not_called()
+
+    @patch("daily_pipeline.start_ollama_server", side_effect=OSError("denied"))
+    @patch("daily_pipeline.find_ollama_executable", return_value="ollama.exe")
+    @patch("daily_pipeline.ollama_models", side_effect=requests.ConnectionError("offline"))
+    def test_start_process_failure(self, models, finder, starter):
+        with self.assertRaises(OllamaLifecycleError) as raised:
+            check_ollama()
+        self.assertEqual(raised.exception.details["failure_reason"], "start_process_failure")
+        self.assertTrue(raised.exception.details["start_attempted"])
 
 
 if __name__ == "__main__":
