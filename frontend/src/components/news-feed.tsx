@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { NewsCard } from "@/components/news-card";
+import { useCardExpansion } from "@/lib/card-expansion";
 import type { NewsItem } from "@/lib/news";
 
 const PAGE_SIZE = 12;
@@ -11,6 +12,7 @@ export function NewsFeed({ items }: { items: NewsItem[] }) {
   const [source, setSource] = useState("全部");
   const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const cardExpansion = useCardExpansion();
   const sources = useMemo(() => ["全部", ...new Set(items.map((item) => item.source))], [items]);
   const filtered = useMemo(() => {
     const term = query.trim().toLocaleLowerCase();
@@ -52,7 +54,7 @@ export function NewsFeed({ items }: { items: NewsItem[] }) {
       {filtered.length ? (
         <>
           <div className="mt-5 grid gap-3.5">
-            {filtered.slice(0, visibleCount).map((item, index) => <NewsCard key={item.id} news={item} index={index} />)}
+            {filtered.slice(0, visibleCount).map((item, index) => <NewsCard key={item.id} news={item} index={index} expanded={cardExpansion.isExpanded(item.id)} onToggle={() => cardExpansion.toggle(item.id)} />)}
           </div>
           {visibleCount < filtered.length && (
             <div className="mt-8 text-center">

@@ -3,10 +3,12 @@
 import Link from "next/link";
 
 import { NewsCard } from "@/components/news-card";
+import { useCardExpansion } from "@/lib/card-expansion";
 import { useFavorites } from "@/lib/favorites";
 
 export function FavoritesView() {
   const { entries, hydrated } = useFavorites();
+  const cardExpansion = useCardExpansion();
 
   if (!hydrated) {
     return <div className="mt-8 rounded-[18px] border border-[#e8eaf0] bg-white px-6 py-12 text-center text-[13px] text-[#8b96a5]">正在读取收藏…</div>;
@@ -23,7 +25,7 @@ export function FavoritesView() {
 
       {entries.length ? (
         <div className="mt-6 grid gap-3.5">
-          {entries.map((entry, index) => <NewsCard key={entry.url} news={entry.news} index={index} />)}
+          {entries.map((entry, index) => <NewsCard key={entry.url} news={entry.news} index={index} expanded={cardExpansion.isExpanded(entry.news.id)} onToggle={() => cardExpansion.toggle(entry.news.id)} />)}
         </div>
       ) : (
         <div className="mt-6 rounded-[18px] border border-dashed border-[#dce1e8] bg-white px-6 py-16 text-center">
