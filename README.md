@@ -1,6 +1,6 @@
 # 学有渔力 Collector V0
 
-每天从指定公开来源采集最新新闻，进行 URL 去重，并在影子运行阶段生成本地抽取式事实摘要。没有数据库、网页或用户推送系统。
+每天从指定公开来源采集最新新闻，进行 URL 去重，并在影子运行阶段生成本地抽取式事实摘要。`frontend/` 提供本地 Web 阅读界面；没有数据库或用户推送系统。
 
 ## 运行
 
@@ -29,6 +29,10 @@ py -3 -m venv .venv
 ```
 
 若未安装 Windows Python Launcher，可使用已安装 Python 的完整路径代替 `py -3`。
+
+## Web 阅读界面
+
+`frontend/` 是独立的 Next.js 项目，直接读取本地新闻和摘要 JSON，不修改采集流程。运行方式、页面和数据规则见 [frontend/README.md](frontend/README.md)。
 
 ## 输出和去重规则
 
@@ -170,4 +174,4 @@ Summary V0.4。Collector 返回 `1` 时仍继续摘要；返回 `2`、当天数�
 
 运行汇总写入 `logs/last_pipeline_run.json`，`pipeline_status` 区分 `success`、
 `partial_source_failure`、`summary_failure` 和 `fatal_failure`。当前为三天影子运行阶段，
-不包含网页、推送、评级或趋势分析。计划任务允许单次运行最多 30 分钟。
+每日任务不启动网页服务，也不包含推送、评级或趋势分析。计划任务允许单次运行最多 30 分钟。
