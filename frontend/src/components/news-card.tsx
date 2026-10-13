@@ -42,7 +42,7 @@ export function NewsCard({ news, date, index, expanded, onToggle }: Props) {
           <div aria-hidden={expanded} className={`reveal-grid ${expanded ? "is-closed" : "is-open"}`}>
             <div className="min-h-0 overflow-hidden">
               <div className={panelClass}>
-                <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-semibold tracking-[.13em] text-[#40796d]"><span className="flex items-center gap-2"><span className="text-[14px] leading-none" aria-hidden="true">✦</span>{isAi ? "AI INSIGHT" : "READING NOTE"}</span><span className="font-normal tracking-normal text-[#7e9c92]">{news.keyPoints.length > 0 ? `${news.keyPoints.length} 条关键事实` : summaryLabel}</span></div>
+                <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-semibold tracking-[.08em] text-[#40796d]"><span className="flex items-center gap-2"><span className="text-[14px] leading-none" aria-hidden="true">✦</span>{isAi ? "AI 摘录" : "摘要速览"}</span><span className="font-normal tracking-normal text-[#7e9c92]">{news.keyPoints.length > 0 ? `${news.keyPoints.length} 条关键事实` : summaryLabel}</span></div>
                 <p className={`insight-copy mt-2 line-clamp-2 text-[13px] leading-[1.7] ${hasSummary ? "text-[#405658]" : "italic text-[#7d8d89]"}`}>{news.summary || "暂无可用摘要，可直接阅读原文。"}</p>
               </div>
             </div>
@@ -51,9 +51,9 @@ export function NewsCard({ news, date, index, expanded, onToggle }: Props) {
           <div id={detailsId} aria-hidden={!expanded} inert={!expanded} className={`reveal-grid insight-expanded ${expanded ? "is-open" : "is-closed"}`}>
             <div className="min-h-0 overflow-hidden">
               <div className={panelClass}>
-                <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-semibold tracking-[.13em] text-[#40796d]"><span className="flex items-center gap-2"><span className="text-[14px] leading-none" aria-hidden="true">✦</span>{isAi ? "AI INSIGHT" : "READING NOTE"}</span><span className="font-normal tracking-normal text-[#7e9c92]">{hasSummary ? `完整${summaryLabel}` : summaryLabel}</span></div>
+                <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-semibold tracking-[.08em] text-[#40796d]"><span className="flex items-center gap-2"><span className="text-[14px] leading-none" aria-hidden="true">✦</span>{isAi ? "AI 摘录" : "摘要速览"}</span><span className="font-normal tracking-normal text-[#7e9c92]">{hasSummary ? `完整${summaryLabel}` : summaryLabel}</span></div>
                 <p className={`insight-copy mt-3 text-[13px] leading-[1.95] ${hasSummary ? "text-[#405658]" : "italic text-[#7d8d89]"}`}>{news.summary || "暂无可用摘要，可直接阅读原文。"}</p>
-                {news.keyPoints.length > 0 && <div className="mt-5 border-t border-[#d9e7e1] pt-4"><p className="text-[10px] font-semibold tracking-[.12em] text-[#478578]">KEY FACTS <span className="ml-1 font-mono text-[#7eaaa0]">/ {news.keyPoints.length}</span></p><ol className="mt-3 space-y-3">{news.keyPoints.map((fact, factIndex) => <li key={`${factIndex}-${fact}`} className="flex gap-3 text-[12px] leading-[1.85] text-[#526b6a]"><span className="shrink-0 pt-px font-mono text-[10px] font-semibold text-[#5b9b8e]">{String(factIndex + 1).padStart(2, "0")}</span><span>{fact}</span></li>)}</ol></div>}
+                {news.keyPoints.length > 0 && <div className="mt-5 border-t border-[#d9e7e1] pt-4"><p className="text-[10px] font-semibold tracking-[.08em] text-[#478578]">关键事实 <span className="ml-1 font-mono text-[#7eaaa0]">/ {news.keyPoints.length}</span></p><ol className="mt-3 space-y-3">{news.keyPoints.map((fact, factIndex) => <li key={`${factIndex}-${fact}`} className="flex gap-3 text-[12px] leading-[1.85] text-[#526b6a]"><span className="shrink-0 pt-px font-mono text-[10px] font-semibold text-[#5b9b8e]">{String(factIndex + 1).padStart(2, "0")}</span><span>{fact}</span></li>)}</ol></div>}
               </div>
             </div>
           </div>

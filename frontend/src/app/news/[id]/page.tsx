@@ -28,7 +28,7 @@ export default async function NewsDetailPage({ params, searchParams }: Props) {
   return (
     <main className="site-container pb-24 pt-8 sm:pt-11">
       <nav aria-label="面包屑导航" className="mb-9 flex items-center gap-2 text-[12px] text-[#8b9a9d]">
-        <Link href="/" className="rounded-sm transition-colors hover:text-[#347770] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#3d8179]">首页</Link>
+        <Link href={date ? `/?date=${date}` : "/"} className="rounded-sm transition-colors hover:text-[#347770] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#3d8179]">首页</Link>
         <span aria-hidden="true">/</span>
         <span className="text-[#526c70]">新闻详情</span>
       </nav>
@@ -82,7 +82,7 @@ export default async function NewsDetailPage({ params, searchParams }: Props) {
 
           <div className="mt-11 flex flex-wrap items-center gap-4 border-t border-[#dfe8e6] pt-7">
             <a href={news.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-[10px] bg-[#244c50] px-5 py-3 text-[13px] font-medium text-white transition-colors hover:bg-[#356d67] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#3d8179]">阅读原文 <span aria-hidden="true">↗</span></a>
-            <Link href={date ? `/history?date=${date}` : "/"} className="rounded-[10px] px-2 py-3 text-[13px] font-medium text-[#6f8587] transition-colors hover:text-[#347770] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179]">← 返回{date ? "历史简报" : "新闻列表"}</Link>
+            <Link href={date ? `/?date=${date}` : "/"} className="rounded-[10px] px-2 py-3 text-[13px] font-medium text-[#6f8587] transition-colors hover:text-[#347770] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179]">← 返回新闻列表</Link>
           </div>
         </article>
 
