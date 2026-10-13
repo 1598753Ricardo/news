@@ -30,7 +30,9 @@ export default async function HomePage() {
             </span>
             <div><p className="text-[11px] font-semibold tracking-[.16em] text-[#e4eeec]">学有渔力 <span className="text-[#9fc8c2]">/</span> NEWS INTELLIGENCE</p><p className="mt-1 text-[10px] font-medium tracking-[.16em] text-[#8fb7b4]">DAILY SIGNAL · 清晰阅读</p></div>
           </div>
-          <time dateTime={snapshot.date} className="rounded-full border border-white/20 bg-white/[.06] px-3.5 py-2 text-[11px] font-medium tracking-wide text-[#d5e6e4]">{formatDate(snapshot.date)}</time>
+          <Link href={snapshot.isMock ? "/history" : `/history?date=${snapshot.date}`} className="inline-flex min-h-10 items-center gap-3 rounded-full border border-white/25 bg-white/[.09] px-4 text-[11px] font-medium tracking-wide text-[#e4f1ee] transition-[background-color,border-color,transform] hover:-translate-y-0.5 hover:border-[#b8d7d0]/70 hover:bg-white/[.16] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" aria-label={`查看历史日期，当前简报 ${formatDate(snapshot.date)}`}>
+            <time dateTime={snapshot.date}>{formatDate(snapshot.date)}</time><span className="h-3 w-px bg-white/25" aria-hidden="true" /><span>切换日期 <span aria-hidden="true">↗</span></span>
+          </Link>
         </div>
 
         <div className="relative z-10 grid gap-10 pb-10 pt-11 lg:grid-cols-[minmax(0,1.06fr)_minmax(330px,.94fr)] lg:items-center lg:gap-14 lg:pb-14 lg:pt-14">
@@ -40,7 +42,7 @@ export default async function HomePage() {
             <p className="mt-6 max-w-[485px] text-[14px] leading-[1.9] text-[#bdd0cf] sm:text-[15px]">从分散的新闻里提取有价值的信息。快速浏览 AI 原文摘录，再按自己的节奏深入阅读。</p>
             <div className="mt-8 flex flex-wrap items-center gap-5">
               <a href="#feed-title" className="inline-flex min-h-11 items-center gap-4 rounded-xl bg-[#e8f3ef] px-5 text-[13px] font-semibold text-[#183b3e] shadow-[0_10px_28px_rgba(2,12,23,.18)] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_16px_34px_rgba(2,12,23,.25)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">进入今日简报 <span aria-hidden="true">↗</span></a>
-              <span className="text-[11px] tracking-[.04em] text-[#8eb4b0]">每天一份，聚焦值得关注的信息</span>
+              <Link href="/history" className="inline-flex min-h-10 items-center gap-2 text-[12px] font-medium tracking-[.04em] text-[#b5d6d0] transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">按日期浏览历史简报 <span aria-hidden="true">→</span></Link>
             </div>
           </div>
 
