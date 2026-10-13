@@ -91,25 +91,22 @@ body {
 .news-card:hover::before, .news-card:focus-within::before { opacity: 1; }
 
 .intelligence-panel {
-  border: 1px solid #dce9e2;
-  border-radius: 15px;
-  background: linear-gradient(110deg, #f1f8f3 0%, #f6faf7 100%);
-  padding: 18px 20px;
-  box-shadow: inset 3px 0 0 #b2d7bf;
+  border-radius: 12px;
+  background: linear-gradient(110deg, #f3f8f4 0%, #f7faf7 100%);
+  padding: 13px 16px;
+  box-shadow: inset 2px 0 0 #b2d7bf;
 }
 
 .intelligence-panel.is-source {
-  border-color: #e3e9e3;
-  background: linear-gradient(110deg, #f6f8f5, #fafbf9);
-  box-shadow: inset 3px 0 0 #c8d7cb;
+  background: linear-gradient(110deg, #f7f9f6, #fafbf9);
+  box-shadow: inset 2px 0 0 #c8d7cb;
 }
 
 .intelligence-panel.is-source > div:first-child { color: #5c756a; }
 
 .intelligence-panel.is-empty {
-  border-color: #ebe6dc;
   background: linear-gradient(110deg, #faf8f2, #fbfaf7);
-  box-shadow: inset 3px 0 0 #dfceb0;
+  box-shadow: inset 2px 0 0 #dfceb0;
 }
 
 .intelligence-panel.is-empty > div:first-child { color: #887258; }
@@ -139,6 +136,20 @@ body {
 
 .news-card { animation: card-enter 560ms backwards cubic-bezier(.2,.8,.2,1); }
 
+@keyframes metric-appear {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.brief-metric-value { display: inline-block; animation: metric-appear 520ms backwards cubic-bezier(.2,.8,.2,1); }
+
+@keyframes insight-fade {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.insight-expanded.is-open .insight-copy { animation: insight-fade 340ms 90ms both ease-out; }
+
 @keyframes favorite-pop {
   0% { transform: scale(1); }
   42% { transform: scale(1.28) rotate(-9deg); }
@@ -154,6 +165,6 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .news-card, .favorite-button svg { animation: none !important; }
+  .news-card, .favorite-button svg, .brief-metric-value, .insight-copy { animation: none !important; }
   *, *::before, *::after { transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
