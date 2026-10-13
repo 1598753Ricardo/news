@@ -31,9 +31,9 @@ export function NewsFeed({ items, date, showSearch = true }: { items: NewsItem[]
     <section aria-labelledby="feed-title" className="mt-12 scroll-mt-28 sm:mt-16">
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
-          <p className="mb-2 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[.18em] text-[#4f8a83]"><span className="h-px w-7 bg-[#79aaa3]" aria-hidden="true" /> THE BRIEFING</p>
-          <h2 id="feed-title" className="text-[25px] font-semibold tracking-[-.05em] text-[#23343c] sm:text-[29px]">阅读简报 <span className="ml-2 align-middle text-[12px] font-normal tracking-normal text-[#8b9a9d]">{filtered.length} 条新闻</span></h2>
-          <p className="mt-2 text-[12px] text-[#829296]">每一条消息，都有清晰的阅读入口。</p>
+          <p className="mb-2 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[.18em] text-[#3d806c]"><span className="h-px w-7 bg-[#71a98d]" aria-hidden="true" /> THE BRIEFING</p>
+          <h2 id="feed-title" className="text-[28px] font-semibold tracking-[-.055em] text-[#1d3032] sm:text-[34px]">阅读简报 <span className="ml-2 align-middle text-[12px] font-normal tracking-normal text-[#6f8380]">{filtered.length} 条新闻</span></h2>
+          <p className="mt-2 text-[12px] text-[#687e79]">每一条消息，都有清晰的阅读入口。</p>
         </div>
         {showSearch && <label className="relative block w-full sm:w-[270px]">
           <span className="sr-only">搜索新闻</span>
