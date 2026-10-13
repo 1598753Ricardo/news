@@ -8,7 +8,7 @@ import type { NewsItem } from "@/lib/news";
 
 const PAGE_SIZE = 12;
 
-export function NewsFeed({ items }: { items: NewsItem[] }) {
+export function NewsFeed({ items, date, showSearch = true }: { items: NewsItem[]; date?: string; showSearch?: boolean }) {
   const [source, setSource] = useState("全部");
   const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -35,13 +35,13 @@ export function NewsFeed({ items }: { items: NewsItem[] }) {
           <h2 id="feed-title" className="text-[25px] font-semibold tracking-[-.05em] text-[#23343c] sm:text-[29px]">阅读简报 <span className="ml-2 align-middle text-[12px] font-normal tracking-normal text-[#8b9a9d]">{filtered.length} 条新闻</span></h2>
           <p className="mt-2 text-[12px] text-[#829296]">每一条消息，都有清晰的阅读入口。</p>
         </div>
-        <label className="relative block w-full sm:w-[270px]">
+        {showSearch && <label className="relative block w-full sm:w-[270px]">
           <span className="sr-only">搜索新闻</span>
           <svg className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8ca09f]" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <circle cx="8.7" cy="8.7" r="5.7" stroke="currentColor" strokeWidth="1.5" /><path d="m13 13 4.2 4.2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
           <input type="search" value={query} onChange={(event) => { setQuery(event.target.value); setVisibleCount(PAGE_SIZE); }} placeholder="搜索标题或内容" className="h-11 w-full rounded-xl border border-[#dfe7e6] bg-white pl-10 pr-3 text-[13px] text-[#23343c] outline-none transition-[border-color,box-shadow] placeholder:text-[#a2afb0] focus:border-[#6fa79d] focus:ring-3 focus:ring-[#6fa79d]/15" />
-        </label>
+        </label>}
       </div>
 
       <div className="-mx-1 mt-7 flex gap-2 overflow-x-auto px-1 pb-2" role="group" aria-label="按来源筛选新闻">
@@ -55,7 +55,7 @@ export function NewsFeed({ items }: { items: NewsItem[] }) {
       {filtered.length ? (
         <>
           <div className="mt-5 grid gap-4">
-            {filtered.slice(0, visibleCount).map((item, index) => <NewsCard key={item.id} news={item} index={index} expanded={cardExpansion.isExpanded(item.id)} onToggle={() => cardExpansion.toggle(item.id)} />)}
+            {filtered.slice(0, visibleCount).map((item, index) => <NewsCard key={item.id} news={item} date={date} index={index} expanded={cardExpansion.isExpanded(item.id)} onToggle={() => cardExpansion.toggle(item.id)} />)}
           </div>
           {visibleCount < filtered.length && (
             <div className="mt-8 text-center">

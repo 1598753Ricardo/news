@@ -6,9 +6,9 @@ import { FavoriteButton } from "@/components/favorite-button";
 import { formatDate } from "@/lib/format";
 import type { NewsItem } from "@/lib/news";
 
-type Props = { news: NewsItem; index: number; expanded: boolean; onToggle: () => void };
+type Props = { news: NewsItem; date?: string; index: number; expanded: boolean; onToggle: () => void };
 
-export function NewsCard({ news, index, expanded, onToggle }: Props) {
+export function NewsCard({ news, date, index, expanded, onToggle }: Props) {
   const detailsId = `news-details-${news.id}`;
   const hasSummary = Boolean(news.summary);
   const isAi = news.summaryKind === "ai";
@@ -27,7 +27,7 @@ export function NewsCard({ news, index, expanded, onToggle }: Props) {
           </div>
 
           <h3 className="mt-4 max-w-[820px] text-[18px] font-semibold leading-[1.5] tracking-[-.035em] text-[#23343c] sm:text-[21px]">
-            <Link href={`/news/${news.id}`} className="rounded-sm outline-none transition-colors hover:text-[#347770] focus-visible:underline focus-visible:underline-offset-4">{news.title}</Link>
+            <Link href={date ? `/news/${news.id}?date=${date}` : `/news/${news.id}`} className="rounded-sm outline-none transition-colors hover:text-[#347770] focus-visible:underline focus-visible:underline-offset-4">{news.title}</Link>
           </h3>
 
           <div aria-hidden={expanded} className={`reveal-grid ${expanded ? "is-closed" : "is-open"}`}>

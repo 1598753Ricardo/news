@@ -44,8 +44,20 @@ export type NewsSnapshot = {
   isMock: boolean;
 };
 
+export type HistorySnapshot = {
+  date: string;
+  items: NewsItem[];
+};
+
 const projectRoot = path.resolve(process.cwd(), "..");
 const dateFile = /^\d{4}-\d{2}-\d{2}\.json$/;
+const processedDir = path.join(projectRoot, "processed_context_guard");
+
+function isValidDate(date: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return false;
+  const parsed = new Date(`${date}T00:00:00Z`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === date;
+}
 
 function text(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
@@ -174,6 +186,40 @@ export async function getNewsSnapshot(): Promise<NewsSnapshot> {
   return { date: "2026-10-12", today, todayCount: 0, items, isMock: true };
 }
 
+export async function getHistoryDates(): Promise<string[]> {
+  try {
+    const today = beijingToday();
+    return (await readdir(processedDir, { withFileTypes: true }))
+      .filter((entry) => entry.isFile() && dateFile.test(entry.name))
+      .map((entry) => entry.name.slice(0, 10))
+      .filter((date) => isValidDate(date) && date <= today)
+      .sort()
+      .reverse();
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") console.error("无法列出历史摘要文件", error);
+    return [];
+  }
+}
+
+export async function getHistorySnapshot(date: string): Promise<HistorySnapshot | null> {
+  if (!isValidDate(date) || date > beijingToday()) return null;
+  const filename = `${date}.json`;
+  const processed = await readArray(path.join(processedDir, filename));
+  if (!processed) return null;
+  const raw = await readArray(path.join(projectRoot, "data", filename));
+  const rawByUrl = new Map<string, unknown>();
+  for (const value of raw ?? []) {
+    if (!value || typeof value !== "object") continue;
+    const url = text((value as RawNews).url);
+    if (url) rawByUrl.set(url, value);
+  }
+  const rows = processed.map((value) => {
+    if (!value || typeof value !== "object") return value;
+    return rawByUrl.get(text((value as RawProcessed).url)) ?? value;
+  });
+  return { date, items: normalize(rows, processed) };
+}
+
 export async function getNewsById(id: string): Promise<NewsItem | undefined> {
   if (!/^[a-f0-9]{16}$/.test(id)) return undefined;
   const snapshot = await getNewsSnapshot();
@@ -197,6 +243,13 @@ export async function getNewsById(id: string): Promise<NewsItem | undefined> {
     if (!raw) continue;
     const processed = await readArray(path.join(projectRoot, "processed_context_guard", filename));
     const found = normalize(raw, processed ?? []).find((item) => item.id === id);
+    if (found) return found;
+  }
+  // A processed brief can still be read when its matching raw file is absent.
+  for (const date of await getHistoryDates()) {
+    if (dates.includes(`${date}.json`) || date === snapshot.date) continue;
+    const history = await getHistorySnapshot(date);
+    const found = history?.items.find((item) => item.id === id);
     if (found) return found;
   }
   return undefined;

@@ -3,21 +3,26 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { formatDate } from "@/lib/format";
-import { getNewsById } from "@/lib/news";
+import { getHistorySnapshot, getNewsById } from "@/lib/news";
 
 export const dynamic = "force-dynamic";
 
-type Props = { params: Promise<{ id: string }> };
+type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ date?: string | string[] }> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
-  const news = await getNewsById(id);
+async function resolveNews(id: string, date?: string) {
+  return date ? (await getHistorySnapshot(date))?.items.find((item) => item.id === id) : getNewsById(id);
+}
+
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const [{ id }, query] = await Promise.all([params, searchParams]);
+  const news = await resolveNews(id, typeof query.date === "string" ? query.date : undefined);
   return { title: news?.title ?? "新闻未找到", description: news?.summary || news?.title };
 }
 
-export default async function NewsDetailPage({ params }: Props) {
-  const { id } = await params;
-  const news = await getNewsById(id);
+export default async function NewsDetailPage({ params, searchParams }: Props) {
+  const [{ id }, query] = await Promise.all([params, searchParams]);
+  const date = typeof query.date === "string" ? query.date : undefined;
+  const news = await resolveNews(id, date);
   if (!news) notFound();
 
   return (
@@ -77,7 +82,7 @@ export default async function NewsDetailPage({ params }: Props) {
 
           <div className="mt-11 flex flex-wrap items-center gap-4 border-t border-[#dfe8e6] pt-7">
             <a href={news.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-[10px] bg-[#244c50] px-5 py-3 text-[13px] font-medium text-white transition-colors hover:bg-[#356d67] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#3d8179]">阅读原文 <span aria-hidden="true">↗</span></a>
-            <Link href="/" className="rounded-[10px] px-2 py-3 text-[13px] font-medium text-[#6f8587] transition-colors hover:text-[#347770] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179]">← 返回新闻列表</Link>
+            <Link href={date ? `/history?date=${date}` : "/"} className="rounded-[10px] px-2 py-3 text-[13px] font-medium text-[#6f8587] transition-colors hover:text-[#347770] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179]">← 返回{date ? "历史简报" : "新闻列表"}</Link>
           </div>
         </article>
 
