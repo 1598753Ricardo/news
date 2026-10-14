@@ -23,9 +23,9 @@ function recentDates(today: string): string[] {
   });
 }
 
-function monthDay(date: string): string {
+function shortDate(date: string): string {
   const [, month, day] = date.split("-");
-  return `${Number(month)}月${Number(day)}日`;
+  return `${Number(month)}/${Number(day)}`;
 }
 
 export function DatePicker({ selectedDate, latestDate, today, availableDates }: Props) {
@@ -73,13 +73,13 @@ export function DatePicker({ selectedDate, latestDate, today, availableDates }: 
           <span className="text-[11px] text-[#8a9d97]">{availableDates.length} 个可用日期</span>
         </div>
         <p className="mt-5 text-[11px] font-medium text-[#708781]">最近 7 天</p>
-        <nav className="mt-2 space-y-0.5" aria-label="最近七天日期">
+        <nav className="mt-2 grid grid-cols-7 gap-1" aria-label="最近七天日期">
           {recent.map((date, index) => {
             const day = new Date(`${date}T00:00:00Z`);
             const selected = date === selectedDate;
-            const relative = index === 0 ? "今天" : index === 1 ? "昨天" : "";
-            const content = <><span className="flex items-center gap-2"><span className="text-[13px] font-semibold tabular-nums">{monthDay(date)}</span>{relative && <span className={`text-[10px] ${selected ? "text-white/75" : "text-[#87a095]"}`}>{relative}</span>}</span><span className={`text-[10px] ${selected ? "text-white/75" : "text-[#9aaca3]"}`}>{weekdays[day.getUTCDay()]}{selected && <span className="ml-1.5" aria-hidden="true">✓</span>}</span></>;
-            return available.has(date) ? <Link key={date} href={hrefFor(date)} scroll={false} onClick={() => setOpen(false)} aria-label={`${formatDate(date)}${relative ? `，${relative}` : ""}`} aria-current={selected ? "date" : undefined} className={`flex min-h-10 items-center justify-between gap-2 rounded-lg px-3 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] ${selected ? "bg-[#2e6557] text-white" : "text-[#46645b] hover:bg-[#edf5f0]"}`}>{content}</Link> : <span key={date} aria-label={`${formatDate(date)}，暂无简报`} className="flex min-h-10 items-center justify-between gap-2 rounded-lg px-3 text-[#b3c0bb]"><span className="flex items-center gap-2"><span className="text-[13px] font-medium tabular-nums">{monthDay(date)}</span>{relative && <span className="text-[10px]">{relative}</span>}</span><span className="text-[10px]">{weekdays[day.getUTCDay()]}</span></span>;
+            const relative = index === 0 ? "今天" : index === 1 ? "昨天" : weekdays[day.getUTCDay()];
+            const content = <><span className="text-[12px] font-semibold tabular-nums">{shortDate(date)}</span><span className={`mt-1 text-[10px] ${selected ? "text-white/75" : "text-[#9aaca3]"}`}>{relative}</span></>;
+            return available.has(date) ? <Link key={date} href={hrefFor(date)} scroll={false} onClick={() => setOpen(false)} aria-label={`${formatDate(date)}，${relative}`} aria-current={selected ? "date" : undefined} className={`flex min-h-14 flex-col items-center justify-center rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] ${selected ? "bg-[#2e6557] text-white" : "text-[#46645b] hover:bg-[#edf5f0]"}`}>{content}</Link> : <span key={date} aria-label={`${formatDate(date)}，暂无简报`} className="flex min-h-14 flex-col items-center justify-center rounded-lg text-[#b3c0bb]"><span className="text-[12px] font-semibold tabular-nums">{shortDate(date)}</span><span className="mt-1 text-[10px]">{relative}</span></span>;
           })}
         </nav>
 
