@@ -18,7 +18,7 @@ function recentDates(today: string): string[] {
   const current = new Date(`${today}T00:00:00Z`);
   return Array.from({ length: 7 }, (_, index) => {
     const day = new Date(current);
-    day.setUTCDate(day.getUTCDate() - index);
+    day.setUTCDate(day.getUTCDate() - (6 - index));
     return day.toISOString().slice(0, 10);
   });
 }
@@ -77,7 +77,7 @@ export function DatePicker({ selectedDate, latestDate, today, availableDates }: 
           {recent.map((date, index) => {
             const day = new Date(`${date}T00:00:00Z`);
             const selected = date === selectedDate;
-            const relative = index === 0 ? "今天" : index === 1 ? "昨天" : weekdays[day.getUTCDay()];
+            const relative = index === 6 ? "今天" : index === 5 ? "昨天" : weekdays[day.getUTCDay()];
             const content = <><span className="text-[12px] font-semibold tabular-nums">{shortDate(date)}</span><span className={`mt-1 text-[10px] ${selected ? "text-white/75" : "text-[#9aaca3]"}`}>{relative}</span></>;
             return available.has(date) ? <Link key={date} href={hrefFor(date)} scroll={false} onClick={() => setOpen(false)} aria-label={`${formatDate(date)}，${relative}`} aria-current={selected ? "date" : undefined} className={`flex min-h-14 flex-col items-center justify-center rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] ${selected ? "bg-[#2e6557] text-white" : "text-[#46645b] hover:bg-[#edf5f0]"}`}>{content}</Link> : <span key={date} aria-label={`${formatDate(date)}，暂无简报`} className="flex min-h-14 flex-col items-center justify-center rounded-lg text-[#b3c0bb]"><span className="text-[12px] font-semibold tabular-nums">{shortDate(date)}</span><span className="mt-1 text-[10px]">{relative}</span></span>;
           })}
