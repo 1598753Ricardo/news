@@ -6,7 +6,7 @@ import { NewsCard } from "@/components/news-card";
 import { useCardExpansion } from "@/lib/card-expansion";
 import type { NewsItem } from "@/lib/news";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5;
 
 export function NewsFeed({ items, date, showSearch = true }: { items: NewsItem[]; date?: string; showSearch?: boolean }) {
   const [source, setSource] = useState("全部");
@@ -71,7 +71,7 @@ export function NewsFeed({ items, date, showSearch = true }: { items: NewsItem[]
           <nav aria-label="新闻分页" className="mt-8 border-t border-[#e0e9e2] pt-5">
             <div className="h-0.5 overflow-hidden rounded-full bg-[#e7eee8]" aria-hidden="true"><div className="h-full rounded-full bg-[#77a68e] transition-[width] duration-300" style={{ width: `${currentPage / pageCount * 100}%` }} /></div>
             <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-              <div><p aria-live="polite" className="text-[13px] font-semibold text-[#365d4e]">第 {currentPage} 页 <span className="font-normal text-[#9aaba1]">/ 共 {pageCount} 页</span></p><p className="mt-1 text-[11px] text-[#8a9b91]">本页 {startIndex + 1}–{startIndex + pageItems.length} 条 · 每页 10 条</p></div>
+              <div><p aria-live="polite" className="text-[13px] font-semibold text-[#365d4e]">第 {currentPage} 页 <span className="font-normal text-[#9aaba1]">/ 共 {pageCount} 页</span></p><p className="mt-1 text-[11px] text-[#8a9b91]">本页 {startIndex + 1}–{startIndex + pageItems.length} 条 · 每页 {PAGE_SIZE} 条</p></div>
               <div className="flex items-center gap-2">
                 <button type="button" onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dce7df] bg-white px-4 text-[12px] font-medium text-[#426d59] transition-colors hover:border-[#a8c8b4] hover:bg-[#f3f8f3] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#dce7df] disabled:hover:bg-white"><span aria-hidden="true">←</span> 上一页</button>
                 <button type="button" onClick={() => changePage(currentPage + 1)} disabled={currentPage === pageCount} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dce7df] bg-white px-4 text-[12px] font-medium text-[#426d59] transition-colors hover:border-[#a8c8b4] hover:bg-[#f3f8f3] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#dce7df] disabled:hover:bg-white">下一页 <span aria-hidden="true">→</span></button>
