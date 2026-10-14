@@ -17,7 +17,7 @@ export function NewsCard({ news, date, index, expanded, onToggle }: Props) {
   const panelClass = `intelligence-panel ${isAi ? "is-ai" : news.summaryKind === "source" ? "is-source" : "is-empty"}`;
 
   return (
-    <article className="news-card group relative overflow-hidden rounded-[22px] border border-[#dce5e2] bg-white px-5 py-4 shadow-[0_4px_18px_rgba(26,48,47,.025)] transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-[#a9c7be] hover:shadow-[0_18px_48px_rgba(26,48,47,.08)] sm:px-7 sm:py-5" style={{ animationDelay: `${(index % 12) * 48}ms` }}>
+    <article className="news-card group relative overflow-hidden rounded-[22px] border border-[#dce5e2] bg-white px-5 py-4 shadow-[0_4px_18px_rgba(26,48,47,.025)] transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-[#a9c7be] hover:shadow-[0_18px_48px_rgba(26,48,47,.08)] sm:px-7 sm:py-5" style={{ animationDelay: `${(index % 10) * 48}ms` }}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2 text-[11px] font-medium text-[#6c7e7d]">
           <span className="mr-1 font-mono text-[10px] font-semibold tracking-[.06em] text-[#7d9d98]">{String(index + 1).padStart(2, "0")} /</span>
