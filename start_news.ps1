@@ -33,6 +33,8 @@ function Test-NewsPage {
     param([string]$BaseUrl)
 
     try {
+        # The API can succeed even when compiling the home page fails.
+        Invoke-WebRequest -Uri "$BaseUrl/" -UseBasicParsing -TimeoutSec 5 | Out-Null
         $response = Invoke-WebRequest -Uri "$BaseUrl/api/history/dates" -UseBasicParsing -TimeoutSec 3
         $data = $response.Content | ConvertFrom-Json
         return $null -ne $data.PSObject.Properties['dates']
@@ -70,7 +72,7 @@ try {
         $node = Get-Command node.exe -ErrorAction Stop
         $stdoutPath = Join-Path $logsRoot 'news_server.stdout.log'
         $stderrPath = Join-Path $logsRoot 'news_server.stderr.log'
-        $server = Start-Process -FilePath $node.Source -ArgumentList @('.\node_modules\next\dist\bin\next', 'dev', '--hostname', '127.0.0.1', '--port', [string]$freePort) -WorkingDirectory $frontendRoot -WindowStyle Minimized -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -PassThru
+        $server = Start-Process -FilePath $node.Source -ArgumentList @('.\node_modules\next\dist\bin\next', 'dev', '--webpack', '--hostname', '127.0.0.1', '--port', [string]$freePort) -WorkingDirectory $frontendRoot -WindowStyle Minimized -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -PassThru
 
         $ready = $false
         for ($attempt = 0; $attempt -lt 60; $attempt++) {
