@@ -40,24 +40,24 @@ export function NewsFeed({ items, date, showSearch = true }: { items: NewsItem[]
   }
 
   return (
-    <section ref={feedRef} aria-labelledby="feed-title" className="mt-12 scroll-mt-28 sm:mt-16">
+    <section ref={feedRef} aria-labelledby="feed-title" className="mt-10 scroll-mt-28">
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
-          <h2 ref={headingRef} id="feed-title" tabIndex={-1} className="text-[28px] font-semibold tracking-[-.055em] text-[#1d3032] outline-none sm:text-[34px]">新闻列表 <span className="ml-2 align-middle text-[12px] font-normal tracking-normal text-[#6f8380]">{filtered.length} 条新闻</span></h2>
-          <p className="mt-2 text-[12px] text-[#87968f]">按来源筛选，或从标题和摘要中找到想读的内容。</p>
+          <h2 ref={headingRef} id="feed-title" tabIndex={-1} className="text-[27px] font-semibold tracking-[-.04em] text-[#26332d] outline-none sm:text-[32px]">新闻列表</h2>
+          <p aria-live="polite" aria-atomic="true" className="mt-2 text-[12px] text-[#7a8279]">{query.trim() || source !== "全部" ? `找到 ${filtered.length} 条新闻` : `共 ${filtered.length} 条新闻`}，从感兴趣的一条开始。</p>
         </div>
         {showSearch && <label className="relative block w-full sm:w-[270px]">
           <span className="sr-only">搜索新闻</span>
-          <svg className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8ca09f]" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <svg className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#89958a]" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <circle cx="8.7" cy="8.7" r="5.7" stroke="currentColor" strokeWidth="1.5" /><path d="m13 13 4.2 4.2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
-          <input type="search" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="搜索标题或内容" className="h-11 w-full rounded-xl border border-[#dfe7e6] bg-white pl-10 pr-3 text-[13px] text-[#23343c] outline-none transition-[border-color,box-shadow] placeholder:text-[#a2afb0] focus:border-[#6fa79d] focus:ring-3 focus:ring-[#6fa79d]/15" />
+          <input type="search" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="搜索标题或摘要" className="h-10 w-full rounded-md border border-[#dedfda] bg-white pl-9 pr-3 text-[13px] text-[#26332d] outline-none transition-colors placeholder:text-[#9da59c] focus:border-[#7c9e8a] focus:ring-2 focus:ring-[#7c9e8a]/10" />
         </label>}
       </div>
 
-      <div className="-mx-1 mt-7 flex gap-2 overflow-x-auto px-1 pb-2" role="group" aria-label="按来源筛选新闻">
+      <div className="mt-5 flex gap-6 overflow-x-auto border-b border-[#dedfda]" role="group" aria-label="按来源筛选新闻">
         {sources.map((name) => (
-          <button key={name} type="button" onClick={() => chooseSource(name)} aria-pressed={source === name} className={`min-h-9 shrink-0 rounded-lg px-3.5 text-[12px] font-medium transition-[background-color,border-color,color,transform] hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] ${source === name ? "bg-[#244c50] text-white shadow-[0_4px_12px_rgba(35,76,80,.13)]" : "border border-[#e0e8e7] bg-white text-[#708186] hover:border-[#a8c8c1] hover:text-[#346d68]"}`}>
+          <button key={name} type="button" onClick={() => chooseSource(name)} aria-pressed={source === name} className={`min-h-10 shrink-0 border-b-2 px-0.5 pb-2 pt-1 text-[12px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] ${source === name ? "border-[#476f57] text-[#2c5940]" : "border-transparent text-[#7a847b] hover:text-[#345741]"}`}>
             {name}
           </button>
         ))}
@@ -65,24 +65,23 @@ export function NewsFeed({ items, date, showSearch = true }: { items: NewsItem[]
 
       {filtered.length ? (
         <>
-          <div className="mt-5 grid gap-4">
+          <div>
             {pageItems.map((item, index) => <NewsCard key={item.id} news={item} date={date} index={startIndex + index} expanded={cardExpansion.isExpanded(item.id)} onToggle={() => cardExpansion.toggle(item.id)} />)}
           </div>
-          <nav aria-label="新闻分页" className="mt-8 border-t border-[#e0e9e2] pt-5">
-            <div className="h-0.5 overflow-hidden rounded-full bg-[#e7eee8]" aria-hidden="true"><div className="h-full rounded-full bg-[#77a68e] transition-[width] duration-300" style={{ width: `${currentPage / pageCount * 100}%` }} /></div>
-            <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-              <div><p aria-live="polite" className="text-[13px] font-semibold text-[#365d4e]">第 {currentPage} 页 <span className="font-normal text-[#9aaba1]">/ 共 {pageCount} 页</span></p><p className="mt-1 text-[11px] text-[#8a9b91]">本页 {startIndex + 1}–{startIndex + pageItems.length} 条 · 每页 {PAGE_SIZE} 条</p></div>
+          <nav aria-label="新闻分页" className="mt-7">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <p aria-live="polite" className="text-[12px] text-[#7a8279]">第 {currentPage} / {pageCount} 页 · 显示 {startIndex + 1}–{startIndex + pageItems.length} 条</p>
               <div className="flex items-center gap-2">
-                <button type="button" onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dce7df] bg-white px-4 text-[12px] font-medium text-[#426d59] transition-colors hover:border-[#a8c8b4] hover:bg-[#f3f8f3] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#dce7df] disabled:hover:bg-white"><span aria-hidden="true">←</span> 上一页</button>
-                <button type="button" onClick={() => changePage(currentPage + 1)} disabled={currentPage === pageCount} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dce7df] bg-white px-4 text-[12px] font-medium text-[#426d59] transition-colors hover:border-[#a8c8b4] hover:bg-[#f3f8f3] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#dce7df] disabled:hover:bg-white">下一页 <span aria-hidden="true">→</span></button>
+                <button type="button" onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1} className="inline-flex min-h-10 items-center gap-2 px-2 text-[12px] font-medium text-[#416653] transition-colors hover:text-[#234d3d] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] disabled:cursor-not-allowed disabled:opacity-40"><span aria-hidden="true">←</span> 上一页</button>
+                <button type="button" onClick={() => changePage(currentPage + 1)} disabled={currentPage === pageCount} className="inline-flex min-h-10 items-center gap-2 px-2 text-[12px] font-medium text-[#416653] transition-colors hover:text-[#234d3d] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] disabled:cursor-not-allowed disabled:opacity-40">下一页 <span aria-hidden="true">→</span></button>
               </div>
             </div>
           </nav>
         </>
       ) : (
-        <div className="mt-5 rounded-[20px] border border-dashed border-[#d4e2df] bg-white px-6 py-16 text-center">
-          <p className="text-[15px] font-medium text-[#34494d]">没有找到相关新闻</p>
-          <p className="mt-2 text-[13px] text-[#849598]">试试其他关键词或切换来源。</p>
+        <div className="border-b border-[#e1e3de] px-2 py-16 text-center">
+          <p className="text-[15px] font-medium text-[#34433a]">没有找到相关新闻</p>
+          <p className="mt-2 text-[13px] text-[#818a80]">试试其他关键词或切换来源。</p>
         </div>
       )}
     </section>
