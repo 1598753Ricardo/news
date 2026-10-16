@@ -19,7 +19,7 @@ export function FavoriteButton({ news }: { news: NewsItem }) {
         aria-label={`${isFavorite ? "取消收藏" : "收藏"}：${news.title}`}
         aria-pressed={isFavorite}
         title={isFavorite ? "取消收藏" : "收藏新闻"}
-        className={`favorite-button flex min-h-10 items-center justify-center gap-1.5 text-[12px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d8179] disabled:cursor-wait ${isFavorite ? "text-[#2d6b4a]" : "text-[#77857a] hover:text-[#345d46]"}`}
+        className="favorite-button"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill={isFavorite ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true">
           <path d="m12 2.8 2.8 5.75 6.35.92-4.6 4.48 1.09 6.32L12 17.28l-5.64 2.99 1.09-6.32-4.6-4.48 6.35-.92L12 2.8Z" />
