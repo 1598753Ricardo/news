@@ -1,27 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-const mobileCards = "(max-width: 639px)";
+import { useCallback, useState } from "react";
 
 export function useCardExpansion() {
-  const [expandedIds, setExpandedIds] = useState<string[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const media = window.matchMedia(mobileCards);
-    const keepOneOpen = (event: MediaQueryListEvent) => {
-      if (event.matches) setExpandedIds((ids) => ids.slice(-1));
-    };
-    media.addEventListener("change", keepOneOpen);
-    return () => media.removeEventListener("change", keepOneOpen);
+  const toggle = useCallback((id: string) => {
+    setExpandedId((current) => current === id ? null : id);
   }, []);
 
-  function toggle(id: string) {
-    setExpandedIds((ids) => {
-      if (ids.includes(id)) return ids.filter((item) => item !== id);
-      return window.matchMedia(mobileCards).matches ? [id] : [...ids, id];
-    });
-  }
+  const close = useCallback(() => setExpandedId(null), []);
 
-  return { isExpanded: (id: string) => expandedIds.includes(id), toggle };
+  return { expandedId, isExpanded: (id: string) => expandedId === id, toggle, close };
 }

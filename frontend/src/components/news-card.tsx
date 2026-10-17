@@ -7,21 +7,22 @@ import { formatDate } from "@/lib/format";
 import type { NewsItem } from "@/lib/news";
 
 type Variant = "feature" | "support" | "standard";
-type Props = { news: NewsItem; date?: string; index: number; expanded: boolean; onToggle: () => void; variant?: Variant };
+type Props = { news: NewsItem; date?: string; index: number; expanded: boolean; onToggle: () => void; variant?: Variant; read?: boolean; onReadToggle?: () => void; current?: boolean; onSelect?: () => void };
 
-export function NewsCard({ news, date, index, expanded, onToggle, variant = "standard" }: Props) {
+export function NewsCard({ news, date, index, expanded, onToggle, variant = "standard", read, onReadToggle, current, onSelect }: Props) {
   const detailsId = `news-details-${news.id}`;
   const canExpand = Boolean(news.summary || news.keyPoints.length);
   const summaryLabel = news.summaryKind === "ai" ? "AI 摘要" : news.summaryKind === "source" ? "来源摘要" : "暂无摘要";
 
   return (
-    <article className={`story story--${variant}${expanded ? " story--expanded" : ""}`}>
+    <article id={`news-card-${news.id}`} tabIndex={-1} onFocusCapture={onSelect} className={`story story--${variant}${expanded ? " story--expanded" : ""}${read ? " story--read" : ""}${current ? " story--current" : ""}`}>
       <span className="story-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
       <div className="story-main">
         <div className="story-meta">
           <span className="story-category">{news.category}</span>
           <span className="story-meta__dot" aria-hidden="true" />
           <span>{news.source}</span>
+          {onReadToggle && <span className="story-read-indicator">{read ? "已读" : "未读"}</span>}
           <span className="story-meta__dot" aria-hidden="true" />
           <time dateTime={news.publishedAt || undefined}>{formatDate(news.publishedAt, true)}</time>
         </div>
@@ -44,6 +45,7 @@ export function NewsCard({ news, date, index, expanded, onToggle, variant = "sta
         <div className="story-actions">
           <a href={news.url} target="_blank" rel="noopener noreferrer" className="story-action story-action--primary" aria-label={`查看原文：${news.title}`}>查看原文 <span aria-hidden="true">↗</span></a>
           <FavoriteButton news={news} />
+          {onReadToggle && <button type="button" onClick={onReadToggle} aria-pressed={read} aria-label={`${read ? "标记未读" : "标记已读"}：${news.title}`} className="story-action story-action--read">{read ? "标记未读" : "标记已读"}</button>}
           {canExpand && <button type="button" aria-expanded={expanded} aria-controls={detailsId} onClick={onToggle} className="story-action story-action--expand">{expanded ? "收起阅读" : "展开阅读"}<svg className={expanded ? "is-rotated" : ""} width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3.5 6 4.5 4 4.5-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg></button>}
         </div>
       </div>

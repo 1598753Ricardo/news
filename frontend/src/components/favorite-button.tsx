@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { toggleFavorite, useFavorites } from "@/lib/favorites";
 import type { NewsItem } from "@/lib/news";
@@ -8,14 +8,27 @@ import type { NewsItem } from "@/lib/news";
 export function FavoriteButton({ news }: { news: NewsItem }) {
   const { entries, hydrated } = useFavorites();
   const [error, setError] = useState(false);
+  const [notice, setNotice] = useState("");
   const isFavorite = entries.some((entry) => entry.url === news.url);
+
+  useEffect(() => {
+    if (!notice) return;
+    const timer = window.setTimeout(() => setNotice(""), 1800);
+    return () => window.clearTimeout(timer);
+  }, [notice]);
+
+  function handleToggle() {
+    const saved = toggleFavorite(news);
+    setError(!saved);
+    if (saved) setNotice(isFavorite ? "已取消收藏" : "已加入收藏");
+  }
 
   return (
     <div className="relative z-10 shrink-0">
       <button
         type="button"
         disabled={!hydrated}
-        onClick={() => setError(!toggleFavorite(news))}
+        onClick={handleToggle}
         aria-label={`${isFavorite ? "取消收藏" : "收藏"}：${news.title}`}
         aria-pressed={isFavorite}
         title={isFavorite ? "取消收藏" : "收藏新闻"}
@@ -26,6 +39,7 @@ export function FavoriteButton({ news }: { news: NewsItem }) {
         </svg>
         <span>{isFavorite ? "已收藏" : "收藏"}</span>
       </button>
+      {notice && <span role="status" className="favorite-notice">{notice}</span>}
       {error && <span role="alert" className="sr-only">无法保存收藏，请检查浏览器存储设置。</span>}
     </div>
   );

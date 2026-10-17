@@ -57,7 +57,7 @@ export default async function HomePage({ searchParams }: Props) {
       {isMock && <p className="data-notice mt-5">正在展示本地示例数据。将采集结果放入 <code>data/YYYY-MM-DD.json</code> 后，页面会自动读取最新数据。</p>}
       {!isMock && selectedDate === latest.date && !isToday && <p className="data-notice mt-5">今天尚无新采集记录，以下展示 {formatDate(selectedDate)} 的新闻。</p>}
 
-      <NewsFeed key={selectedDate} items={items} date={history ? selectedDate : undefined} />
+      <NewsFeed key={selectedDate} items={items} date={history ? selectedDate : undefined} issueDate={selectedDate} isToday={isToday} />
 
       <footer className="site-footer"><span>学有渔力 News <span aria-hidden="true">/</span> 保持好奇，清晰阅读</span><span>摘要仅供快速浏览，请以原文为准</span></footer>
     </main>
